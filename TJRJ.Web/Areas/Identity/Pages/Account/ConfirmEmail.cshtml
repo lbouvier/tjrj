@@ -1,0 +1,20 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Confirm email";
+}
+<div style="text-align: center">
+    <h1>@Model.StatusMessage</h1>
+    <p>
+        <h2>
+            Para acessar a nossa plataforma, clique no botão abaixo!
+            <br />Em caso de dúvidas, contate nosso suporte.
+        </h2>
+       
+    </p>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <a class="btn btn-block btn-success btn-lg" asp-page="./Login">Acesse sua conta</a>
+        </div>
+    </div>
+</div>

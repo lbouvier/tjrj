@@ -1,0 +1,16 @@
+﻿@model TJRJ.Entities.Assunto
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/AdminLTE/_Layout.cshtml";
+}
+
+<h1>Deseja excluir o registro <b>"@Html.DisplayFor(model => model.Descricao)"</b>?</h1>
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CodAs" />
+        <input type="submit" value="Excluir" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-primary">Cancelar</a>
+    </form>
+</div>
