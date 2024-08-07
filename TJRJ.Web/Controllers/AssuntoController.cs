@@ -23,10 +23,10 @@ namespace TJRJ.Controllers
         // GET: Assunto
         public async Task<IActionResult> Index()
         {
-            var assuntos = (await _assuntoService.GetAllAsync()).OrderBy(x => x.CodAs);
-            if (!string.IsNullOrEmpty(_assuntoService._repository.Mensagens))
+            var assuntos = (await _assuntoService.GetAll()).OrderBy(x => x.CodAs);
+            if (!string.IsNullOrEmpty(_assuntoService.Mensagens))
             {
-                TempData["error"] = _assuntoService._repository.Mensagens;
+                TempData["error"] = _assuntoService.Mensagens;
             }
             return View(assuntos);
         }
@@ -40,10 +40,10 @@ namespace TJRJ.Controllers
                 return View();
             }
 
-            var assunto = await _assuntoService.GetByIdAsync(id);
+            var assunto = await _assuntoService.GetById(id);
             if (assunto == null)
             {
-                TempData["error"] = _assuntoService._repository.Mensagens;
+                TempData["error"] = _assuntoService.Mensagens;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -65,10 +65,10 @@ namespace TJRJ.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _assuntoService.AddAsync(assunto);
-                if (!string.IsNullOrEmpty(_assuntoService._repository.Mensagens))
+                await _assuntoService.Create(assunto);
+                if (!string.IsNullOrEmpty(_assuntoService.Mensagens))
                 {
-                    TempData["error"] = _assuntoService._repository.Mensagens;
+                    TempData["error"] = _assuntoService.Mensagens;
                     return View(assunto);
                 }
                 return RedirectToAction(nameof(Index));
@@ -85,10 +85,10 @@ namespace TJRJ.Controllers
                 return View();
             }
 
-            var assunto = await _assuntoService.GetByIdAsync(id);
+            var assunto = await _assuntoService.GetById(id);
             if (assunto == null)
             {
-                TempData["error"] = _assuntoService._repository.Mensagens;
+                TempData["error"] = _assuntoService.Mensagens;
                 return View();
             }
             return View(assunto);
@@ -109,10 +109,10 @@ namespace TJRJ.Controllers
 
             if (ModelState.IsValid)
             {
-                await _assuntoService.UpdateAsync(assunto);
-                if (!string.IsNullOrEmpty(_assuntoService._repository.Mensagens))
+                await _assuntoService.Update(assunto);
+                if (!string.IsNullOrEmpty(_assuntoService.Mensagens))
                 {
-                    TempData["error"] = _assuntoService._repository.Mensagens;
+                    TempData["error"] = _assuntoService.Mensagens;
                     return View(assunto);
                 }
                 return RedirectToAction(nameof(Index));
@@ -128,10 +128,10 @@ namespace TJRJ.Controllers
                 return NotFound();
             }
 
-            var assunto = await _assuntoService.GetByIdAsync(id);
+            var assunto = await _assuntoService.GetById(id);
             if (assunto == null)
             {
-                TempData["error"] = _assuntoService._repository.Mensagens;
+                TempData["error"] = _assuntoService.Mensagens;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -143,19 +143,14 @@ namespace TJRJ.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _assuntoService.DeleteAsync(id);
-            if (!string.IsNullOrEmpty(_assuntoService._repository.Mensagens))
+            await _assuntoService.Delete(id);
+            if (!string.IsNullOrEmpty(_assuntoService.Mensagens))
             {
-                TempData["error"] = _assuntoService._repository.Mensagens;
+                TempData["error"] = _assuntoService.Mensagens;
                 return View();
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AssuntoExists(int id)
-        {
-            return _assuntoService.Any(e => e.CodAs == id);
         }
     }
 }

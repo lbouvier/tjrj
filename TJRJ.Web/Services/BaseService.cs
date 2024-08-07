@@ -8,38 +8,36 @@ using TJRJ.Repository;
 
 namespace TJRJ.Services
 {
-    public class BaseService<T> : DbSet<T> where T : class
+    public class BaseService<T> : Repository<T> where T : class
     {
-        public readonly Repository<T> _repository;
-        public string Mensagens;
-        public BaseService(Repository<T> repository)
+        public BaseService(ApplicationDbContext context) : base(context)
         {
-            _repository = repository;
+
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return await _repository.GetAllAsync();
+            return await GetAllAsync();
         }
 
-        public async Task<T> GetByIdAsync(int? id)
+        public async Task<T> GetById(int? id)
         {
-            return await _repository.GetByIdAsync(id);
+            return await GetByIdAsync(id);
         }
 
-        public async Task AddAsync(T livro)
+        public async Task Create(T livro)
         {
-            await _repository.AddAsync(livro);
+            await AddAsync(livro);
         }
 
-        public async Task UpdateAsync(T livro)
+        public async Task Update(T livro)
         {
-            await _repository.UpdateAsync(livro);
+            await UpdateAsync(livro);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task Delete(int id)
         {
-            await _repository.DeleteAsync(id);
+            await DeleteAsync(id);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace TJRJ.Web.Repository.Mapping
         public void Configure(EntityTypeBuilder<LivroAutor> builder)
         {
             builder.ToTable("LivroAutor");
-            builder.HasKey(la => new { la.LivroCod, la.AutorCodAu });
+            builder.HasKey(la => la.Id);
 
             builder.HasOne(la => la.Livro)
             .WithMany(l => l.LivroAutores)

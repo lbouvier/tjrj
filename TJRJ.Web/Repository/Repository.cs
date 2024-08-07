@@ -35,7 +35,7 @@ namespace TJRJ.Repository
         {
             try
             {
-                return await _dbSet.FindAsync(id);
+                return (await _dbSet.FindAsync(id));
             }
             catch (Exception ex)
             {
@@ -62,6 +62,7 @@ namespace TJRJ.Repository
         {
             try
             {
+
                 _dbSet.Attach(entity);
 
                 _context.Update(entity);

@@ -33,9 +33,9 @@ namespace TJRJ.Web
             services.AddScoped<BaseService<Assunto>>();
             services.AddScoped<BaseService<Autor>>();
             services.AddScoped<BaseService<Livro>>();
-            services.AddScoped<LivroService>();
-            services.AddScoped<AssuntoService>();
-            services.AddScoped<AutorService>();
+            //services.AddScoped<LivroService>();
+            //services.AddScoped<AssuntoService>();
+            //services.AddScoped<AutorService>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
         }

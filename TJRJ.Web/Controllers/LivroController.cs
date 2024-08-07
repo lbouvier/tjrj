@@ -13,12 +13,12 @@ namespace TJRJ.Controllers
 {
     public class LivroController : Controller
     {
-        private readonly AssuntoService _assuntoService;
-        private readonly AutorService _autorService;
-        private readonly LivroService _livroService;
+        private readonly BaseService<Assunto> _assuntoService;
+        private readonly BaseService<Autor> _autorService;
+        private readonly BaseService<Livro> _livroService;
 
 
-        public LivroController(AssuntoService assuntoService, AutorService autorService, LivroService livroService)
+        public LivroController(BaseService<Assunto> assuntoService, BaseService<Autor> autorService, BaseService<Livro> livroService)
         {
             _assuntoService = assuntoService;
             _autorService = autorService;
@@ -28,10 +28,10 @@ namespace TJRJ.Controllers
         // GET: Livro
         public async Task<IActionResult> Index()
         {
-            var livros = (await _livroService.GetAllAsync()).OrderByDescending(x => x.Cod);
-            if (!string.IsNullOrEmpty(_livroService._repository.Mensagens))
+            var livros = (await _livroService.GetAll()).OrderByDescending(x => x.Cod);
+            if (!string.IsNullOrEmpty(_livroService.Mensagens))
             {
-                TempData["error"] = _livroService._repository.Mensagens;
+                TempData["error"] = _livroService.Mensagens;
             }
             return View(livros);
         }
@@ -44,10 +44,10 @@ namespace TJRJ.Controllers
                 return View();
             }
 
-            var livro = await _livroService.GetByIdAsync(id);
+            var livro = await _livroService.GetById(id);
             if (livro == null)
             {
-                TempData["error"] = _livroService._repository.Mensagens;
+                TempData["error"] = _livroService.Mensagens;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -57,16 +57,13 @@ namespace TJRJ.Controllers
         // GET: Livro/Create
         public async Task<IActionResult> Create()
         {
-            var autores = (await _autorService.GetAllAsync()).OrderBy(x => x.CodAu);
-            var assuntos = (await _assuntoService.GetAllAsync()).OrderBy(x => x.CodAs);
+            var autores = (await _autorService.GetAll()).OrderBy(x => x.CodAu);
+            var assuntos = (await _assuntoService.GetAll()).OrderBy(x => x.CodAs);
             ViewBag.LivroAutores = new SelectList(autores, "CodAu", "Nome");
             ViewBag.LivroAssuntos = new SelectList(assuntos, "CodAs", "Descricao");
             return View();
         }
 
-        // POST: Livro/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Cod,Titulo,Editora,Edicao,AnoPublicacao,LivroAutores,LivroAssuntos,Preco")] Livro livro, int[] LivroAutores, int[] LivroAssuntos)
@@ -77,7 +74,7 @@ namespace TJRJ.Controllers
                 {
                     foreach (var livroAutorCodigo in LivroAutores)
                     {
-                        var autor = await _autorService.GetByIdAsync(livroAutorCodigo);
+                        var autor = await _autorService.GetById(livroAutorCodigo);
                         if (autor != null)
                         {
                             livro.LivroAutores.Add(new LivroAutor { Autor = autor });
@@ -89,17 +86,17 @@ namespace TJRJ.Controllers
                 {
                     foreach (var assuntoCodigo in LivroAssuntos)
                     {
-                        var assunto = await _assuntoService.GetByIdAsync(assuntoCodigo);
+                        var assunto = await _assuntoService.GetById(assuntoCodigo);
                         if (assunto != null)
                         {
                             livro.LivroAssuntos.Add(new LivroAssunto { Assunto = assunto });
                         }
                     }
                 }
-                await _livroService.AddAsync(livro);
-                if (!string.IsNullOrEmpty(_livroService._repository.Mensagens))
+                await _livroService.Create(livro);
+                if (!string.IsNullOrEmpty(_livroService.Mensagens))
                 {
-                    TempData["error"] = _livroService._repository.Mensagens;
+                    TempData["error"] = _livroService.Mensagens;
                     return View(livro);
                 }
                 return RedirectToAction(nameof(Index));
@@ -115,16 +112,18 @@ namespace TJRJ.Controllers
                 return NotFound();
             }
 
-            var livro = await _livroService.GetByIdIncludes(id.Value);
+            var livro = await _livroService._dbSet.Include(x => x.LivroAutores)
+                                            .ThenInclude(la => la.Autor)
+                                            .Include(x => x.LivroAssuntos).ThenInclude(x => x.Assunto).FirstOrDefaultAsync(x => x.Cod == id.Value);
 
             if (livro == null)
             {
-                TempData["error"] = _livroService._repository.Mensagens;
+                TempData["error"] = _livroService.Mensagens;
                 return View();
             }
-
-            ViewBag.LivroAssuntos = (await _assuntoService.GetAllAsync()).OrderBy(x => x.CodAs).ToList();
-            ViewBag.LivroAutores = (await _autorService.GetAllAsync()).OrderBy(x => x.CodAu).ToList();
+            var teste = (await _autorService.GetAll()).OrderBy(x => x.CodAu).ToList();
+            ViewBag.LivroAssuntos = (await _assuntoService.GetAll()).OrderBy(x => x.CodAs).ToList();
+            ViewBag.LivroAutores = (await _autorService.GetAll()).OrderBy(x => x.CodAu).ToList();
             return View(livro);
         }
 
@@ -147,13 +146,13 @@ namespace TJRJ.Controllers
                 {
                     foreach (var livroAutorCodigo in autores)
                     {
-                        livro.LivroAutores.Add(new LivroAutor { AutorCodAu = livroAutorCodigo, LivroCod = id });
-                        //var autor = await _autorService.GetByIdIncludes(livroAutorCodigo);
-                        //if (autor != null)
-                        //{
-                        //    //_autorService._repository._context.Entry(livro).State = EntityState.Detached;
-                            
-                        //}
+
+                        var autor = await _autorService.GetById(livroAutorCodigo);
+                        if (autor != null)
+                        {
+                            _autorService._context.Entry(autor).State = EntityState.Detached;
+                            livro.LivroAutores.Add(new LivroAutor { AutorCodAu = livroAutorCodigo, LivroCod = id });
+                        }
                     }
                 }
 
@@ -161,21 +160,21 @@ namespace TJRJ.Controllers
                 {
                     foreach (var assuntoCodigo in assuntos)
                     {
-                        livro.LivroAssuntos.Add(new LivroAssunto { AssuntoCodAs = assuntoCodigo });
-                        //var assunto = await _assuntoService.GetByIdIncludes(assuntoCodigo);
-                        //if (assunto != null)
-                        //{
-                           
-                        //}
+                        var assunto = await _assuntoService.GetById(assuntoCodigo);
+                        if (assunto != null)
+                        {
+                            _assuntoService._context.Entry(assunto).State = EntityState.Detached;
+                            livro.LivroAssuntos.Add(new LivroAssunto { AssuntoCodAs = assuntoCodigo, LivroCod = id });
+                        }
                     }
                 }
 
-                await _livroService.UpdateAsync(id, livro);
-                if (!string.IsNullOrEmpty(_livroService._repository.Mensagens))
+                await _livroService.Update(livro);
+                if (!string.IsNullOrEmpty(_livroService.Mensagens))
                 {
-                    TempData["error"] = _livroService._repository.Mensagens;
-                    ViewBag.LivroAssuntos = (await _assuntoService.GetAllAsync()).OrderBy(x => x.CodAs).ToList();
-                    ViewBag.LivroAutores = (await _autorService.GetAllAsync()).OrderBy(x => x.CodAu).ToList();
+                    TempData["error"] = _livroService.Mensagens;
+                    ViewBag.LivroAssuntos = (await _assuntoService.GetAll()).OrderBy(x => x.CodAs).ToList();
+                    ViewBag.LivroAutores = (await _autorService.GetAll()).OrderBy(x => x.CodAu).ToList();
                     return View(livro);
                 }
                 return RedirectToAction(nameof(Index));
@@ -191,7 +190,7 @@ namespace TJRJ.Controllers
                 return NotFound();
             }
 
-            var livro = await _livroService.GetByIdAsync(id);
+            var livro = await _livroService.GetById(id);
             if (livro == null)
             {
                 return View();
@@ -205,19 +204,14 @@ namespace TJRJ.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _livroService.DeleteAsync(id);
-            if (!string.IsNullOrEmpty(_livroService._repository.Mensagens))
+            await _livroService.Delete(id);
+            if (!string.IsNullOrEmpty(_livroService.Mensagens))
             {
-                TempData["error"] = _livroService._repository.Mensagens;
+                TempData["error"] = _livroService.Mensagens;
                 return View();
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool LivroExists(int id)
-        {
-            return _livroService.Any(e => e.Cod == id);
         }
     }
 }

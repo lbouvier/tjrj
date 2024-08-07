@@ -23,10 +23,10 @@ namespace TJRJ.Controllers
         // GET: Autor
         public async Task<IActionResult> Index()
         {
-            var autores = (await _autorService.GetAllAsync()).OrderBy(x => x.CodAu);
-            if (!string.IsNullOrEmpty(_autorService._repository.Mensagens))
+            var autores = (await _autorService.GetAll()).OrderBy(x => x.CodAu);
+            if (!string.IsNullOrEmpty(_autorService.Mensagens))
             {
-                TempData["error"] = _autorService._repository.Mensagens;
+                TempData["error"] = _autorService.Mensagens;
             }
             return View(autores);
         }
@@ -40,10 +40,10 @@ namespace TJRJ.Controllers
                 return View();
             }
 
-            var Autor = await _autorService.GetByIdAsync(id);
+            var Autor = await _autorService.GetById(id);
             if (Autor == null)
             {
-                TempData["error"] = _autorService._repository.Mensagens;
+                TempData["error"] = _autorService.Mensagens;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -65,10 +65,10 @@ namespace TJRJ.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _autorService.AddAsync(Autor);
-                if (!string.IsNullOrEmpty(_autorService._repository.Mensagens))
+                await _autorService.Create(Autor);
+                if (!string.IsNullOrEmpty(_autorService.Mensagens))
                 {
-                    TempData["error"] = _autorService._repository.Mensagens;
+                    TempData["error"] = _autorService.Mensagens;
                     return View(Autor);
                 }
                 return RedirectToAction(nameof(Index));
@@ -85,10 +85,10 @@ namespace TJRJ.Controllers
                 return View();
             }
 
-            var Autor = await _autorService.GetByIdAsync(id);
+            var Autor = await _autorService.GetById(id);
             if (Autor == null)
             {
-                TempData["error"] = _autorService._repository.Mensagens;
+                TempData["error"] = _autorService.Mensagens;
                 return View();
             }
             return View(Autor);
@@ -109,10 +109,10 @@ namespace TJRJ.Controllers
 
             if (ModelState.IsValid)
             {
-                await _autorService.UpdateAsync(Autor);
-                if (!string.IsNullOrEmpty(_autorService._repository.Mensagens))
+                await _autorService.Update(Autor);
+                if (!string.IsNullOrEmpty(_autorService.Mensagens))
                 {
-                    TempData["error"] = _autorService._repository.Mensagens;
+                    TempData["error"] = _autorService.Mensagens;
                     return View(Autor);
                 }
                 return RedirectToAction(nameof(Index));
@@ -128,10 +128,10 @@ namespace TJRJ.Controllers
                 return NotFound();
             }
 
-            var Autor = await _autorService.GetByIdAsync(id);
+            var Autor = await _autorService.GetById(id);
             if (Autor == null)
             {
-                TempData["error"] = _autorService._repository.Mensagens;
+                TempData["error"] = _autorService.Mensagens;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -143,19 +143,14 @@ namespace TJRJ.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _autorService.DeleteAsync(id);
-            if (!string.IsNullOrEmpty(_autorService._repository.Mensagens))
+            await _autorService.Delete(id);
+            if (!string.IsNullOrEmpty(_autorService.Mensagens))
             {
-                TempData["error"] = _autorService._repository.Mensagens;
+                TempData["error"] = _autorService.Mensagens;
                 return View();
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AutorExists(int id)
-        {
-            return _autorService.Any(e => e.CodAu == id);
         }
     }
 }

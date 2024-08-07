@@ -1,6 +1,6 @@
 ﻿namespace TJRJ.Entities
 {
-    public class LivroAutor //: EntidadeBase
+    public class LivroAutor : EntidadeBase
     {
         public LivroAutor()
         {

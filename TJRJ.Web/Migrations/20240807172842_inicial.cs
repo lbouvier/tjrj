@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TJRJ.Migrations
 {
-    public partial class Firts : Migration
+    public partial class inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,6 +51,7 @@ namespace TJRJ.Migrations
                     Editora = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Edicao = table.Column<int>(type: "int", nullable: false),
+                    Preco = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     AnoPublicacao = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -89,12 +90,14 @@ namespace TJRJ.Migrations
                 name: "LivroAutor",
                 columns: table => new
                 {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     LivroCod = table.Column<int>(type: "int", nullable: false),
                     AutorCodAu = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LivroAutor", x => new { x.LivroCod, x.AutorCodAu });
+                    table.PrimaryKey("PK_LivroAutor", x => x.Id);
                     table.ForeignKey(
                         name: "FK_LivroAutor_Autor_AutorCodAu",
                         column: x => x.AutorCodAu,
@@ -119,6 +122,11 @@ namespace TJRJ.Migrations
                 name: "IX_LivroAutor_AutorCodAu",
                 table: "LivroAutor",
                 column: "AutorCodAu");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LivroAutor_LivroCod",
+                table: "LivroAutor",
+                column: "LivroCod");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
