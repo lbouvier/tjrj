@@ -78,15 +78,21 @@ namespace TJRJ.Migrations
 
             modelBuilder.Entity("TJRJ.Entities.LivroAssunto", b =>
                 {
-                    b.Property<int>("LivroCod")
-                        .HasColumnType("int");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
 
                     b.Property<int>("AssuntoCodAs")
                         .HasColumnType("int");
 
-                    b.HasKey("LivroCod", "AssuntoCodAs");
+                    b.Property<int>("LivroCod")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AssuntoCodAs");
+
+                    b.HasIndex("LivroCod");
 
                     b.ToTable("LivroAssunto");
                 });

@@ -65,12 +65,14 @@ namespace TJRJ.Migrations
                 name: "LivroAssunto",
                 columns: table => new
                 {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     LivroCod = table.Column<int>(type: "int", nullable: false),
                     AssuntoCodAs = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LivroAssunto", x => new { x.LivroCod, x.AssuntoCodAs });
+                    table.PrimaryKey("PK_LivroAssunto", x => x.Id);
                     table.ForeignKey(
                         name: "FK_LivroAssunto_Assunto_AssuntoCodAs",
                         column: x => x.AssuntoCodAs,
@@ -117,6 +119,11 @@ namespace TJRJ.Migrations
                 name: "IX_LivroAssunto_AssuntoCodAs",
                 table: "LivroAssunto",
                 column: "AssuntoCodAs");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LivroAssunto_LivroCod",
+                table: "LivroAssunto",
+                column: "LivroCod");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LivroAutor_AutorCodAu",

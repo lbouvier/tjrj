@@ -1,4 +1,4 @@
-﻿@model TJRJ.Entities.Livro
+﻿@model TJRJ.ViewModels.LivroViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -10,6 +10,12 @@
 <div>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cod)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cod)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Titulo)
         </dt>
@@ -33,6 +39,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.AnoPublicacao)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Preco)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Preco)
         </dd>
     </dl>
 </div>

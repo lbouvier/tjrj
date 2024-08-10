@@ -10,6 +10,6 @@ namespace TJRJ.Entities
         }
         public int CodAs { get; set; }
         public string Descricao { get; set; }
-        public ICollection<LivroAssunto> LivroAssuntos { get; set; }
+        public virtual ICollection<LivroAssunto> LivroAssuntos { get; set; }
     }
 }

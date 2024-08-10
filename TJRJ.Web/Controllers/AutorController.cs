@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TJRJ.Entities;
 using TJRJ.Services;
+using TJRJ.ViewModels;
 using TJRJ.Web.Data;
 
 namespace TJRJ.Controllers
@@ -14,21 +16,22 @@ namespace TJRJ.Controllers
     public class AutorController : Controller
     {
         private readonly BaseService<Autor> _autorService;
-
-        public AutorController(BaseService<Autor> AutorService)
+        private readonly IMapper _mapper;
+        public AutorController(BaseService<Autor> AutorService, IMapper mapper)
         {
             _autorService = AutorService;
+            _mapper = mapper;
         }
 
         // GET: Autor
         public async Task<IActionResult> Index()
         {
-            var autores = (await _autorService.GetAll()).OrderBy(x => x.CodAu);
+            var autores = (await _autorService.GetAll()).OrderByDescending(x => x.CodAu);
             if (!string.IsNullOrEmpty(_autorService.Mensagens))
             {
                 TempData["error"] = _autorService.Mensagens;
             }
-            return View(autores);
+            return View(_mapper.Map<List<AutorViewModel>>(autores));
         }
 
         // GET: Autor/Details/5
@@ -40,14 +43,14 @@ namespace TJRJ.Controllers
                 return View();
             }
 
-            var Autor = await _autorService.GetById(id);
-            if (Autor == null)
+            var autor = await _autorService.GetById(id);
+            if (autor == null)
             {
                 TempData["error"] = _autorService.Mensagens;
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(Autor);
+            return View(_mapper.Map<AutorViewModel>(autor));
         }
 
         // GET: Autor/Create
@@ -61,20 +64,20 @@ namespace TJRJ.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CodAu,Nome")] Autor Autor)
+        public async Task<IActionResult> Create([Bind("CodAu,Nome")] AutorViewModel autor)
         {
             if (ModelState.IsValid)
             {
-                await _autorService.Create(Autor);
+                await _autorService.Create(_mapper.Map<Autor>(autor));
                 if (!string.IsNullOrEmpty(_autorService.Mensagens))
                 {
                     TempData["error"] = _autorService.Mensagens;
-                    return View(Autor);
+                    return View(autor);
                 }
                 return RedirectToAction(nameof(Index));
             }
             TempData["success"] = "Cadastro realizado com sucesso!";
-            return View(Autor);
+            return View(autor);
         }
 
         // GET: Autor/Edit/5
@@ -85,13 +88,13 @@ namespace TJRJ.Controllers
                 return View();
             }
 
-            var Autor = await _autorService.GetById(id);
-            if (Autor == null)
+            var autor = await _autorService.GetById(id);
+            if (autor == null)
             {
                 TempData["error"] = _autorService.Mensagens;
                 return View();
             }
-            return View(Autor);
+            return View(_mapper.Map<AutorViewModel>(autor));
         }
 
         // POST: Autor/Edit/5
@@ -99,9 +102,9 @@ namespace TJRJ.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CodAu,Nome")] Autor Autor)
+        public async Task<IActionResult> Edit(int id, [Bind("CodAu,Nome")] AutorViewModel autor)
         {
-            if (id != Autor.CodAu)
+            if (id != autor.CodAu)
             {
                 TempData["error"] = "Registro informado é diferente do registro à atualizar";
                 return View();
@@ -109,15 +112,15 @@ namespace TJRJ.Controllers
 
             if (ModelState.IsValid)
             {
-                await _autorService.Update(Autor);
+                await _autorService.Update(_mapper.Map<Autor>(autor));
                 if (!string.IsNullOrEmpty(_autorService.Mensagens))
                 {
                     TempData["error"] = _autorService.Mensagens;
-                    return View(Autor);
+                    return View(autor);
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(Autor);
+            return View(autor);
         }
 
         // GET: Autor/Delete/5
@@ -128,14 +131,14 @@ namespace TJRJ.Controllers
                 return NotFound();
             }
 
-            var Autor = await _autorService.GetById(id);
-            if (Autor == null)
+            var autor = await _autorService.GetById(id);
+            if (autor == null)
             {
                 TempData["error"] = _autorService.Mensagens;
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(Autor);
+            return View(_mapper.Map<AutorViewModel>(autor));
         }
 
         // POST: Autor/Delete/5

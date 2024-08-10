@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TJRJ.Entities;
 using TJRJ.Services;
+using TJRJ.ViewModels;
 using TJRJ.Web.Data;
 
 namespace TJRJ.Controllers
@@ -14,21 +16,23 @@ namespace TJRJ.Controllers
     public class AssuntoController : Controller
     {
         private readonly BaseService<Assunto> _assuntoService;
+        private readonly IMapper _mapper;
 
-        public AssuntoController(BaseService<Assunto> assuntoService)
+        public AssuntoController(BaseService<Assunto> assuntoService, IMapper mapper)
         {
             _assuntoService = assuntoService;
+            _mapper = mapper;
         }
 
         // GET: Assunto
         public async Task<IActionResult> Index()
         {
-            var assuntos = (await _assuntoService.GetAll()).OrderBy(x => x.CodAs);
+            var assuntos = (await _assuntoService.GetAll()).OrderByDescending(x => x.CodAs);
             if (!string.IsNullOrEmpty(_assuntoService.Mensagens))
             {
                 TempData["error"] = _assuntoService.Mensagens;
             }
-            return View(assuntos);
+            return View(_mapper.Map<List<AssuntoViewModel>>(assuntos));
         }
 
         // GET: Assunto/Details/5
@@ -47,7 +51,7 @@ namespace TJRJ.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(assunto);
+            return View(_mapper.Map<AssuntoViewModel>(assunto));
         }
 
         // GET: Assunto/Create
@@ -61,11 +65,11 @@ namespace TJRJ.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CodAs,Descricao")] Assunto assunto)
+        public async Task<IActionResult> Create([Bind("CodAs,Descricao")] AssuntoViewModel assunto)
         {
             if (ModelState.IsValid)
             {
-                await _assuntoService.Create(assunto);
+                await _assuntoService.Create(_mapper.Map<Assunto>(assunto));
                 if (!string.IsNullOrEmpty(_assuntoService.Mensagens))
                 {
                     TempData["error"] = _assuntoService.Mensagens;
@@ -91,7 +95,7 @@ namespace TJRJ.Controllers
                 TempData["error"] = _assuntoService.Mensagens;
                 return View();
             }
-            return View(assunto);
+            return View(_mapper.Map<AssuntoViewModel>(assunto));
         }
 
         // POST: Assunto/Edit/5
@@ -99,7 +103,7 @@ namespace TJRJ.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CodAs,Descricao")] Assunto assunto)
+        public async Task<IActionResult> Edit(int id, [Bind("CodAs,Descricao")] AssuntoViewModel assunto)
         {
             if (id != assunto.CodAs)
             {
@@ -109,7 +113,7 @@ namespace TJRJ.Controllers
 
             if (ModelState.IsValid)
             {
-                await _assuntoService.Update(assunto);
+                await _assuntoService.Update(_mapper.Map<Assunto>(assunto));
                 if (!string.IsNullOrEmpty(_assuntoService.Mensagens))
                 {
                     TempData["error"] = _assuntoService.Mensagens;
@@ -135,7 +139,7 @@ namespace TJRJ.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(assunto);
+            return View(_mapper.Map<AssuntoViewModel>(assunto));
         }
 
         // POST: Assunto/Delete/5

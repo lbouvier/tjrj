@@ -9,7 +9,7 @@ using TJRJ.Web.Data;
 namespace TJRJ.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240807172842_inicial")]
+    [Migration("20240810030704_inicial")]
     partial class inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,15 +80,21 @@ namespace TJRJ.Migrations
 
             modelBuilder.Entity("TJRJ.Entities.LivroAssunto", b =>
                 {
-                    b.Property<int>("LivroCod")
-                        .HasColumnType("int");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
 
                     b.Property<int>("AssuntoCodAs")
                         .HasColumnType("int");
 
-                    b.HasKey("LivroCod", "AssuntoCodAs");
+                    b.Property<int>("LivroCod")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AssuntoCodAs");
+
+                    b.HasIndex("LivroCod");
 
                     b.ToTable("LivroAssunto");
                 });

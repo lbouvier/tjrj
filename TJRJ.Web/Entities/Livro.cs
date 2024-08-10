@@ -6,8 +6,8 @@ namespace TJRJ.Entities
     {
         public Livro()
         {
-            LivroAutores = new HashSet<LivroAutor>();
-            LivroAssuntos = new HashSet<LivroAssunto>();
+            LivroAutores = new List<LivroAutor>();
+            LivroAssuntos = new List<LivroAssunto>();
         }
 
         public int Cod { get; set; }
@@ -16,8 +16,7 @@ namespace TJRJ.Entities
         public int Edicao { get; set; }
         public decimal? Preco { get; set; }
         public string AnoPublicacao { get; set; }
-        public ICollection<LivroAutor> LivroAutores { get; set; }
-        public ICollection<LivroAssunto> LivroAssuntos { get; set; }
-        //public List<string> Test { get; set; }
+        public IList<LivroAutor> LivroAutores { get; set; }
+        public  IList<LivroAssunto> LivroAssuntos { get; set; }
     }
 }

@@ -34,14 +34,18 @@ namespace TJRJ.Web.Controllers
             return View();
         }
 
+        [HttpGet("CreateReport")]
+        public async Task<IActionResult> CreateReport()
+        {
+            var caminhoReport = Path.Combine(_webHostEnv.WebRootPath, @"reports\ReportMvc.frx");
+            var reportFile = caminhoReport;
+            var freport = new FastReport.Report();
+            var livros = await _livroService.GetAll();
 
-        //public IActionResult CreateReport()
-        //{
-        //    var caminhoReport = Path.Combine(_webHostEnv.WebRootPath, @"reports\ReportMvc.frx");
-        //    var reportFile = caminhoReport;
-        //    var freport = FastReport.Report();
-        //    var view = freport.CreateReport(reportFile);
-        //}
+            freport.Dictionary.RegisterBusinessObject(livros, "livros", 10, true);
+            freport.Report.Save(reportFile);
+            return View($"Relatório Gerado: {caminhoReport}" );
+        }
 
         public IActionResult Privacy()
         {
