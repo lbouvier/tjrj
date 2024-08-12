@@ -1,19 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="08/07/2024 17:59:28" ReportInfo.Modified="08/07/2024 17:59:28" ReportInfo.CreatorVersion="2024.2.14.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="08/12/2024 00:01:21" ReportInfo.Modified="08/12/2024 00:01:21" ReportInfo.CreatorVersion="2022.2.17.0">
   <Dictionary>
-    <BusinessObjectDataSource Name="livros" ReferenceName="livros" DataType="System.Collections.Generic.List`1[[TJRJ.Entities.Livro, TJRJ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" Enabled="true">
-      <Column Name="Cod" DataType="System.Int32"/>
-      <Column Name="Titulo" DataType="System.String"/>
-      <Column Name="Editora" DataType="System.String"/>
-      <Column Name="Edicao" DataType="System.Int32"/>
-      <Column Name="Preco" DataType="System.Nullable`1[[System.Decimal, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"/>
-      <Column Name="AnoPublicacao" DataType="System.String"/>
-      <BusinessObjectDataSource Name="LivroAutores" DataType="System.Collections.Generic.ICollection`1[[TJRJ.Entities.LivroAutor, TJRJ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" Enabled="true">
-        <Column Name="Value" Enabled="false" DataType="System.RuntimeType"/>
-      </BusinessObjectDataSource>
-      <BusinessObjectDataSource Name="LivroAssuntos" DataType="System.Collections.Generic.ICollection`1[[TJRJ.Entities.LivroAssunto, TJRJ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" Enabled="true">
-        <Column Name="Value" Enabled="false" DataType="System.RuntimeType"/>
-      </BusinessObjectDataSource>
+    <BusinessObjectDataSource Name="livros" ReferenceName="livros" DataType="System.Collections.Generic.List`1[[TJRJ.ViewModels.RelatorioViewModel, TJRJ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" Enabled="true">
+      <Column Name="AutorCodigo" DataType="System.Int32"/>
+      <Column Name="AutorNome" DataType="System.String"/>
+      <Column Name="LivroCodigo" DataType="System.Int32"/>
+      <Column Name="LivroNome" DataType="System.String"/>
+      <Column Name="Assuntos" DataType="System.String"/>
     </BusinessObjectDataSource>
   </Dictionary>
 </Report>

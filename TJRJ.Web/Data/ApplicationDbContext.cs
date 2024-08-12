@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Text;
 using TJRJ.Entities;
+using TJRJ.Repository.Mapping;
+using TJRJ.ViewModels;
 using TJRJ.Web.Repository.Mapping;
 using TJRJ.Web.ViewModels;
 
@@ -22,6 +25,7 @@ namespace TJRJ.Web.Data
         public DbSet<Assunto> Assuntos { get; set; }
         public DbSet<LivroAutor> LivroAutores { get; set; }
         public DbSet<LivroAssunto> LivroAssuntos { get; set; }
+        public DbSet<RelatorioViewModel> RelatorioViewModel { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //base.OnModelCreating(modelBuilder);
@@ -36,6 +40,7 @@ namespace TJRJ.Web.Data
             modelBuilder.Entity<LivroAutor>(new LivroAutorMap().Configure);
             modelBuilder.Entity<LivroAssunto>(new LivroAssuntoMap().Configure);
             modelBuilder.Entity<Assunto>(new AssuntoMap().Configure);
+            modelBuilder.Entity<RelatorioViewModel>(new RelatorioMap().Configure);
 
         }
     }

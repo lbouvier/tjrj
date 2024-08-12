@@ -8,6 +8,7 @@ using TJRJ.Entities;
 using TJRJ.Mapper;
 using TJRJ.Repository;
 using TJRJ.Services;
+using TJRJ.ViewModels;
 using TJRJ.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,7 @@ builder.Services.AddScoped<BaseService<Autor>>();
 builder.Services.AddScoped<BaseService<Livro>>();
 builder.Services.AddScoped<BaseService<LivroAutor>>();
 builder.Services.AddScoped<BaseService<LivroAssunto>>();
+builder.Services.AddScoped<BaseService<RelatorioViewModel>>();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.AddRazorPages();
 builder.Services.AddMvc();
