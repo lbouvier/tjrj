@@ -24,7 +24,6 @@ namespace TJRJ.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _webHostEnv;
         private readonly BaseService<RelatorioViewModel> _livroService;
-        //private readonly List<Teste> testes;
         public class Teste
         {
             public int Id { get; set; }
@@ -35,11 +34,6 @@ namespace TJRJ.Web.Controllers
             _logger = logger;
             _webHostEnv = webHostEnv;
             _livroService = livroService;
-            //testes = new List<Teste>();
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    testes.Add(new Teste { Id = i, Descricao = $"Descrição {i}" });
-            //}
         }
 
         public IActionResult Index()
