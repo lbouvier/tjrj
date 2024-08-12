@@ -98,10 +98,6 @@ namespace TJRJ.Web.Controllers
         {
             var caminhoReport = Path.Combine(_webHostEnv.WebRootPath, @"reports\ReportMvc.frx");
             var reportFile = caminhoReport;
-            //if (System.IO.File.Exists(caminhoReport))
-            //{
-            //    System.IO.File.Delete(caminhoReport);
-            //}
 
             var freport = new FastReport.Report();
             var livros = await _livroService.GetAll();
