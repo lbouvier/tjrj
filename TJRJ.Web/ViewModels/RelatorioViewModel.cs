@@ -11,6 +11,7 @@ namespace TJRJ.ViewModels
             
         }
 
+        public int Id { get; set; }
         public int AutorCodigo { get; set; }
         public string AutorNome { get; set; }
         public int LivroCodigo { get; set; }

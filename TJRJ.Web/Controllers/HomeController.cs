@@ -15,6 +15,7 @@ using TJRJ.Web.Models;
 using FastReport;
 using TJRJ.ViewModels;
 using FastReport.Export.PdfSimple;
+using System.Collections;
 
 namespace TJRJ.Web.Controllers
 {
@@ -23,11 +24,22 @@ namespace TJRJ.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _webHostEnv;
         private readonly BaseService<RelatorioViewModel> _livroService;
+        //private readonly List<Teste> testes;
+        public class Teste
+        {
+            public int Id { get; set; }
+            public string Descricao { get; set; }
+        }
         public HomeController(ILogger<HomeController> logger, IWebHostEnvironment webHostEnv, BaseService<RelatorioViewModel> livroService)
         {
             _logger = logger;
             _webHostEnv = webHostEnv;
             _livroService = livroService;
+            //testes = new List<Teste>();
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    testes.Add(new Teste { Id = i, Descricao = $"Descrição {i}" });
+            //}
         }
 
         public IActionResult Index()
@@ -45,8 +57,11 @@ namespace TJRJ.Web.Controllers
                     var caminhoReport = Path.Combine(_webHostEnv.WebRootPath, @"reports\ReportMvc.frx");
                     var reportFile = caminhoReport;
                     // Carrega o arquivo .frx do relatório
+                    var livros = _livroService._context.RelatorioViewModel.ToList();
                     report.Load(caminhoReport);
-
+                    report.RegisterData(_livroService._context.RelatorioViewModel.ToList(), "livros");
+                    report.GetDataSource("livros");
+                    report.Dictionary.RegisterBusinessObject(livros, "livros", 10, true);
                     // Prepara o relatório
                     report.Prepare();
                 }
@@ -74,63 +89,29 @@ namespace TJRJ.Web.Controllers
                         ms.Position = 0;
 
                         // Retorna o PDF como um arquivo para o navegador
-                        return File(ms.ToArray(), "application/pdf", "relatorio.pdf");
+                        return File(ms.ToArray(), "application/pdf");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Erro ao exportar para PDF: " + ex.Message);
-                        return BadRequest("Erro ao exportar para PDF.");
+                        return BadRequest("Erro ao exportar para PDF." + ex.Message);
                     }
                 }
             }
         }
-
-        //[HttpGet("Relatorio")]
-        //public IActionResult Relatorio()
-        //{
-        //    var caminhoReport = Path.Combine(_webHostEnv.WebRootPath, @"reports\ReportMvc.frx");
-        //    var reportFile = caminhoReport;
-        //    using (var freport = new Report())
-        //    {
-        //        var livros = _livroService.GetAll().Result.ToList();
-        //        freport.Report.Load(reportFile);
-        //        //freport.Dictionary.RegisterBusinessObject(livros, "livros", 10, true);
-        //        try
-        //        {
-        //            freport.Prepare();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Logar ou tratar o erro para diagnóstico
-        //            Console.WriteLine("Erro ao preparar o relatório: " + ex.Message);
-        //            return BadRequest("Erro ao preparar o relatório.");
-        //        }
-
-        //        using (MemoryStream stream = new MemoryStream())
-        //        {
-        //            var pdf = new PDFSimpleExport();
-        //            pdf.Export(freport, stream);
-        //            //stream.Flush();
-        //            stream.Position = 0;
-        //            Response.ContentType = "application/pdf";
-        //            Response.Headers.Add("content-disposition", "inline; filename=arquivo.pdf");
-        //            return File(stream.ToArray(), "application/pdf", "arquivo.pdf");
-        //        };
-        //    }
-            
-
-            
-        //}
-
 
         [HttpGet("CreateReport")]
         public async Task<IActionResult> CreateReport()
         {
             var caminhoReport = Path.Combine(_webHostEnv.WebRootPath, @"reports\ReportMvc.frx");
             var reportFile = caminhoReport;
+            //if (System.IO.File.Exists(caminhoReport))
+            //{
+            //    System.IO.File.Delete(caminhoReport);
+            //}
+
             var freport = new FastReport.Report();
             var livros = await _livroService.GetAll();
-
+            
             freport.Dictionary.RegisterBusinessObject(livros, "livros", 10, true);
             freport.Report.Save(reportFile);
             return RedirectToAction("Index");

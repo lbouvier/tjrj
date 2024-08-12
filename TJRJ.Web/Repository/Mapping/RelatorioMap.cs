@@ -9,7 +9,7 @@ namespace TJRJ.Repository.Mapping
     {
         public void Configure(EntityTypeBuilder<RelatorioViewModel> builder)
         {
-            builder.HasNoKey();
+            builder.HasKey(x => x.Id);
             builder.ToView("vwrelatorioautores");
         }
     }
