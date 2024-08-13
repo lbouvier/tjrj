@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="08/12/2024 15:12:51" ReportInfo.Modified="08/12/2024 15:40:29" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="08/12/2024 15:12:51" ReportInfo.Modified="08/12/2024 17:27:16" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <BusinessObjectDataSource Name="livros" ReferenceName="livros" DataType="System.Int32" Enabled="true">
       <Column Name="Id" DataType="System.Int32"/>
@@ -23,7 +23,7 @@
       <TextObject Name="Text9" Left="122.85" Top="9.45" Width="85.05" Height="18.9" Text="Qtde Livros" Font="Arial, 10pt"/>
       <TextObject Name="Text11" Left="368.55" Top="9.45" Width="47.25" Height="18.9" Text="Livros" Font="Arial, 10pt"/>
       <TextObject Name="Text13" Left="472.5" Top="9.45" Width="66.15" Height="18.9" Text="Assuntos" Font="Arial, 10pt"/>
-      <TextObject Name="Text15" Left="595.35" Top="9.45" Width="94.5" Height="18.9" Text="TotalPreco" Font="Arial, 10pt"/>
+      <TextObject Name="Text15" Left="642.6" Top="9.45" Width="75.6" Height="18.9" Text="TotalPreco" Font="Arial, 10pt"/>
       <LineObject Name="Line2" Top="37.8" Width="718.2"/>
       <TextObject Name="Text6" Left="245.7" Top="9.45" Width="47.25" Height="18.9" Text="Autor" Font="Arial, 10pt"/>
     </PageHeaderBand>

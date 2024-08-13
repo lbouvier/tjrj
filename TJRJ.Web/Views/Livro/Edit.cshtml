@@ -61,10 +61,10 @@
             </div>
             <div class="form-group">
                 @Html.Label("Assuntos")<br />
-                <select id="assuntos" name="assuntos" class="form-control">
+                <select id="assuntos" name="assuntos" multiple="multiple" class="form-control listbox">
                     @foreach (var assunto in assuntosList)
                     {
-                        <!option value="@assunto.CodAs" @(selectedAutores.Contains(assunto.CodAs) ? "selected" : "")>@assunto.Descricao</!option>
+                        <!option value="@assunto.CodAs" @(selectedAssuntos.Contains(assunto.CodAs) ? "selected" : "")>@assunto.Descricao</!option>
                     }
                 </select>
             </div>
