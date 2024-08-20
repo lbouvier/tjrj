@@ -25,7 +25,7 @@ namespace TJRJ.ViewModels
 
         [Required(ErrorMessage = "Informe a edição do livro")]
         [Display(Name = "Edição")]
-        public int Edicao { get; set; }
+        public int? Edicao { get; set; }
 
         [Required(ErrorMessage = "Informe o preço do livro")]
         [Display(Name = "Preço")]

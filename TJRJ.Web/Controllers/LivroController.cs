@@ -103,6 +103,13 @@ namespace TJRJ.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                var autores = (await _autorService.GetAll()).OrderBy(x => x.CodAu);
+                var assuntos = (await _assuntoService.GetAll()).OrderBy(x => x.CodAs);
+                ViewBag.LivroAutores = new SelectList(autores, "CodAu", "Nome");
+                ViewBag.LivroAssuntos = new SelectList(assuntos, "CodAs", "Descricao");
+            }
             return View(livroView);
         }
 
